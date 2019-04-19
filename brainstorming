@@ -1,0 +1,38 @@
+brainstorming
+
+idea: to build an webapp like FocusNow to prevent usage on social media
+in order to use facebook or any sites that users find useless, one have to solve a quiz question to proceed (friction)
+- can pull quiz questions from classes to remind yourself how behind you are
+- important goals one wants to set to stay on track
+- scary staticstics 
+- can vary the contents being displayed 
+
+MongoDB: store quiz questions/quotes? 
+- store statistics about the user
+user_input.ejs: collect user input on what sites they would like to block
+question.ejs: display the quiz question on browser
+monitor.js:  backend logic: 
+    /**
+ *   if the http request is banned: spit out a question
+ *      if the question is answered correctly, allow website browsing for 10 minutes
+ *           (if the user quit the website before the 10 minutes, 
+ *           they can continue using it next time without doing the quiz again)
+ *      if wrong answer:
+ *           give another try
+ *      if wrong for three times:
+ *           block the entire website use for (custom_input) hour
+ */
+
+MVP structure: 
+    TODO user to submit preferences for what they wish to block 
+    TODO identify banned url -> parse URL 
+    TODO start recording page view time
+    if banned OR used for over 20 minutes:  
+    TODO pop up a form to interact the view of URL 
+        ** how to store questions. Connect with a database? Pull questions online
+        close the form upon satisfying conditions
+        else: banned completely? 
+    
+        
+TODO: 
+    1. to parse the http request

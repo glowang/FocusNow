@@ -1,0 +1,25 @@
+<!-- This form is presented "modally" when check_url of the background.js return true
+    reference: https://demo.agektmr.com/dialog/
+-->
+<dialog id="dialog">
+    <form method="dialog">
+        <p>What is the answer to 1+1?</p>
+        <textarea class="form-control" disabled>Lorem ipsum dolor sit amet,....</textarea> 
+        <!-- what is this^ -->
+        <button type="submit" value="1">Yes</button>
+        <button type="submit" value="2" autofocus>No</button>
+    </form>
+</dialog>
+<script>
+    var dialog = document.getElementById('dialog');
+    dialog.showModal();
+    dialog.addEventListener('close', function (event) {
+        if (dialog.returnValue == '2') {
+            alert("You are right")
+            dialog.close() // let the user proceed
+        } else {
+            alert("WTF")
+            // TODO either present a new question or close the window entirely
+        }
+    });
+</script>

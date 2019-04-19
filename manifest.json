@@ -1,0 +1,25 @@
+{
+    "name": "Focus Now",
+    "description" : "in order to use facebook or any sites that users find useless, one have to solve a quiz question to proceed (friction)",
+    "version": "1.0",
+    "manifest_version": 2,
+    "author": "Gloria Wang",
+    "browser_action": {
+      "default_title": "Have a good day",
+      "default_popup":"popup.html"
+    }, 
+    "permissions": [
+      "tabs",
+      "storage"
+    ],
+    "background": {
+      "scripts": ["app.js"],
+      "persistent": false 
+    },
+    "content_scripts": [
+      {
+        "matches": ["http://*/*","https://*/*"],
+        "js": ["app.js"]
+      }
+    ]
+  }
