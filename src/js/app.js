@@ -71,3 +71,10 @@ function check_url(url){
     //}
     // then check if url is in our banned list                                   
 //});
+
+
+chrome.contextMenus.onClicked.addListener(function (clickData) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     chrome.tabs.sendMessage(tabs[0].id, {type: "openModal"});
+    });
+  });
