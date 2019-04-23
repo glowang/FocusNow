@@ -47,3 +47,4 @@ chrome.runtime.sendMessage({blocked: host}, response => {
         console.log("Not blocked! Refresh and be happy");
     }
 });
+

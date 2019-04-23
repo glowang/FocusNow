@@ -6,5 +6,15 @@
         <p>
             This is some text that should display in popup
         </p>
+        <input type="button" value="Add to blacklist" id="button" onclick="addToBlacklist">
     </head>
+
+    <script>
+        var addToBlacklist = () => {
+            console.log("Attempting to block: " + location.hostname);
+            chrome.runtime.sendMessage({addToBlacklist: location.hostname}, function(response) {
+                console.log("Added " + location.hostname + " to blacklist: " + response.added);
+            });
+        }
+    </script>
 </html>
