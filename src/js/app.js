@@ -92,7 +92,7 @@ var toggle_popup_flag = (url) => {
 
 // TODO: do some hostname preprocessing before append
 // TOOD: write some logic for storing this in options and persist
-const blacklist = new Set(["www.facebook.com", "github.com"]);
+var blacklist = new Set(["www.facebook.com", "github.com"]);
 blacklist.forEach(toggle_popup_flag)
 
 chrome.runtime.onMessage.addListener(
@@ -100,12 +100,15 @@ chrome.runtime.onMessage.addListener(
         console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-        if (request.greeting == "hello") {
+        if (request.greeting == "hello") { // just for debugging purposes
             sendResponse({farewell: "goodbye"});
-        } else if (request.blocked != null) {
+        } else if (request.blocked != null) { // return if 
             sendResponse({isBlocked: blacklist.has(request.blocked)}); // TODO: actually toggle instead
-        } else if (request.toggleBlocked != null) {
+        } else if (request.toggleBlocked != null) { 
             toggle_popup_flag(request.toggleBlocked);
             sendResponse({toggleBlocked: "toggled!"})
+        } else if (request.addToBlacklist != null) {
+            blacklist.add(request.addToBlacklist);
+            sendResponse({added: true}); // TODO: make this more meaningful
         }
     });
