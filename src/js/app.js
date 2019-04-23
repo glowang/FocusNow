@@ -71,3 +71,41 @@ function check_url(url){
     //}
     // then check if url is in our banned list                                   
 //});
+
+
+/**
+ * Storage stuff for toggle popup on a specific URL
+ */
+var toggle_popup_flag = (url) => {
+    chrome.storage.sync.get([url], function(result) {
+        var prev = result.key;
+        console.log('Value currently is ' + prev);
+        if (prev == null) {
+            prev = false;
+        }
+        var value = !prev; // Toggle 
+        chrome.storage.sync.set({url: value}, function() {
+            console.log('Value is set to ' + value);
+          });
+      });
+}
+
+// TODO: do some hostname preprocessing before append
+// TOOD: write some logic for storing this in options and persist
+const blacklist = new Set(["www.facebook.com", "github.com"]);
+blacklist.forEach(toggle_popup_flag)
+
+chrome.runtime.onMessage.addListener(
+    (request, sender, sendResponse) => {
+        console.log(sender.tab ?
+                    "from a content script:" + sender.tab.url :
+                    "from the extension");
+        if (request.greeting == "hello") {
+            sendResponse({farewell: "goodbye"});
+        } else if (request.blocked != null) {
+            sendResponse({isBlocked: blacklist.has(request.blocked)}); // TODO: actually toggle instead
+        } else if (request.toggleBlocked != null) {
+            toggle_popup_flag(request.toggleBlocked);
+            sendResponse({toggleBlocked: "toggled!"})
+        }
+    });

@@ -13,13 +13,13 @@
       "storage"
     ],
     "background": {
-      "scripts": ["app.js"],
+      "scripts": ["js/app.js"],
       "persistent": false 
     },
     "content_scripts": [
       {
         "matches": ["http://*/*","https://*/*"],
-        "js": ["app.js"]
+        "js": ["js/popup.js"]
       }
     ]
   }
