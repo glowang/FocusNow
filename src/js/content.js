@@ -34,6 +34,32 @@ var interceptPage = () => {
     document.body.insertBefore(newDiv, null); 
 }
 
+
+class UrlSettings {
+    constructor(dom, isblocked, time, allowed_time) {
+        this.domainName = dom;
+        this.blocked = isblocked;
+        this.timestamp = time;
+        this.allowedTime = allowed_time;
+    };
+};
+
+// TODO HTML form to collect user input and call function updateUrlSetting? ？
+var sendUrlUpdate = (dom,isblocked,time,allowed_time) => {
+    chrome.runtime.sendMessage({dom, UrlSettings(dom,isblocked,time,allowed_time)});
+}
+
+// listening for app.js to complete its update in the background: 
+chrome.runtime.onMessage.addListener(
+    (request, sender, sendResponse) => {
+        if (request.greeting === "Updated!") {
+            console.log("hahA");
+        } else {
+            console.log("Haven't received confirmation of update");
+        }
+    });
+
+
 chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
     console.log(response.farewell);
   });

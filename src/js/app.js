@@ -58,20 +58,6 @@ function check_url(url){
     } 
 };
 
-/** present a quiz form if user clicks on a banned website  
- * @param sender argument has information about the tab id (not sure if needed?)
- * @param sendResponse argument is used for sending response back to the monitor.js script
- */
-//chrome.runtime.onMessage.addListener(function(response,sender,sendResponse){
-//    alert("hellosss");
-    //const parsed_url = parsed(url) // get the right formatr  
-//    if (check_url(parsed_url)){
-        // TODO how to pop up a new page? an HTTP call? redirect or Open a new, overriden page?
-        
-    //}
-    // then check if url is in our banned list                                   
-//});
-
 
 /**
  * Storage stuff for toggle popup on a specific URL
@@ -92,8 +78,53 @@ var toggle_popup_flag = (url) => {
 
 // TODO: do some hostname preprocessing before append
 // TOOD: write some logic for storing this in options and persist
-var blacklist = new Set(["www.facebook.com", "github.com"]);
-blacklist.forEach(toggle_popup_flag)
+
+// an event listener that calls update_blacklist when users want to update from content scripts
+chrome.runtime.onMessage.addListener( // how to receive an object and identify it LOL
+    (request,sender,sendResponse) => {
+        if (request.greeting == {K,V}) // TODO: this is tricky; how do you specify a format
+        update_blacklist({k:v});
+    } // call update_blacklist with the input received 
+    // input should be a KV: {domain: value}
+);
+
+
+// a typical pair is {"dom":UrlSettings Object}
+// need "dom" because we want to look up easily from chrome storage
+// TODO: chrome.runtime.sendMessage() 
+// here is another function that does update the keyvalue pair. done through sending messages to app.js
+
+chrome.runtime.onMessage.addListener(function(response,sender,sendResponse){
+    chrome.storage.sync.get(dom, function(object) {
+        if (typeof object === 'undefined') { // means this KV has yet to be created
+            settings = new UrlSettings(dom,isblocked,time,allowed_time);
+            chrome.storage.sync.set({dom:settings},()=> {
+                console.log("A new url setting has been recorded");
+            });
+        } else {
+          // if object already exists, update its setting accordingly 
+            object.domainName = dom;
+            object.blocked = isblocked;
+            object.timestamp = time;
+            object.allowedTime = allowed_time;
+            console.log("Settings for "+dom+"has been updated");
+        };
+      });
+    chrome.runtime.sendMessage({greeting:"Updated!"}, function(response) { // probably want to use Promise in the future
+        console.log("Please take note of the updated key value pair"); // sending it to app.js
+        });
+    });
+
+
+// once new inputs come in from content script
+const update_blacklist = ({key:value})=> {
+    chrome.storage.sync.set({key:value}, function() {
+        console.log('Value is set to ' + value);
+      });  
+}
+
+//var blacklist = new Set();
+//blacklist.forEach(toggle_popup_flag)
 
 chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
